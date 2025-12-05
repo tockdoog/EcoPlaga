@@ -1,0 +1,25 @@
+# FastAPI framework
+fastapi==0.111.1
+uvicorn[standard]==0.23.2
+
+# ORM para Base de Datos
+SQLAlchemy==2.0.22
+asyncpg==0.27.0             # Driver PostgreSQL
+databases[postgresql]==0.7.3
+
+# Validación de datos
+pydantic==2.5.1
+
+# Análisis de datos
+pandas==2.1.1
+numpy==1.26.2
+
+# Seguridad / Autenticación
+python-jose==3.3.0          # JWT
+passlib[bcrypt]==1.8.0
+
+# Testing
+pytest==7.4.0
+
+# Utilidades extra
+python-dotenv==1.0.1        # Cargar variables de entorno desde .env

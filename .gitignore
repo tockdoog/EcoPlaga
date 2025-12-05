@@ -1,0 +1,29 @@
+# Entorno virtual
+env/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Configuración del IDE
+.vscode/
+.idea/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Configuración sensible / secretos
+.env
+
+# Bases de datos locales (si no quieres subirlas)
+*.sqlite3
+
+# Archivos generados
+*.log
+*.csv
+*.xlsx
+
+# Node / Frontend (si usas npm)
+node_modules/
+dist/
