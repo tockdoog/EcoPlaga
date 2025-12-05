@@ -5,7 +5,7 @@ uvicorn[standard]==0.23.2
 # ORM para Base de Datos
 SQLAlchemy==2.0.22
 asyncpg==0.27.0             # Driver PostgreSQL
-databases[postgresql]==0.7.3
+databases[postgresql]
 
 # Validación de datos
 pydantic==2.5.1
