@@ -1,0 +1,4 @@
+body { font-family: Inter, Arial, sans-serif; margin: 0; padding: 20px; background: linear-gradient(180deg,#eef2ff,#f8fafc); color:#0f172a; }
+header h1 { color:#064e3b; }
+#stats { background:white; padding:16px; border-radius:10px; box-shadow: 0 6px 18px rgba(2,6,23,0.08); max-width:800px; }
+#export { margin-top:12px; padding:8px 12px; border-radius:8px; border:none; background:#2563eb; color:white; }

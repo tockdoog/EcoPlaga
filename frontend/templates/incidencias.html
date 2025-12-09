@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Incidencias - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<h1>Registro de Incidencias</h1>
+
+<nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/plagas">Plagas</a>
+    <a href="/incidencias">Incidencias</a>
+    <a href="/recomendaciones">Recomendaciones</a>
+    <a href="#" onclick="logout()">Cerrar Sesión</a>
+</nav>
+
+<div id="incidenciasList"></div>
+
+<script>
+    if (!localStorage.getItem("token")) window.location.href = "/";
+
+    async function cargarIncidencias() {
+        const res = await fetch("/incidencias/", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        const data = await res.json();
+
+        document.getElementById("incidenciasList").innerHTML =
+            data.map(i => `
+                <p>
+                    <strong>Plaga:</strong> ${i.plaga_id} |
+                    <strong>Cultivo:</strong> ${i.cultivo_id} |
+                    <strong>Severidad:</strong> ${i.severidad}
+                </p>
+            `).join("");
+    }
+
+    cargarIncidencias();
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    }
+</script>
+
+</body>
+</html>

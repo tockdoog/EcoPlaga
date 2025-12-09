@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-banner">
+            <div class="eco-icon">🌾</div>
+            <h1>EcoPlaga</h1>
+            <p>Únete a la comunidad de productores que confían en tecnología para el control sostenible de plagas.</p>
+            <div class="benefits">
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Acceso a herramientas profesionales</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Monitoreo en tiempo real</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Soporte técnico especializado</span>
+                </div>
+                <div class="benefit-item">
+                    <span class="benefit-icon">✓</span>
+                    <span>Reportes y análisis detallados</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="register-form">
+            <div class="form-header">
+                <h2>Crea tu cuenta</h2>
+                <p>Comienza a gestionar tu producción agrícola hoy</p>
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">
+                        <span class="label-icon">👤</span>
+                        Nombre completo
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            placeholder="Juan Pérez" 
+                            required 
+                            autocomplete="name"
+                            minlength="3">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <span class="label-icon">📧</span>
+                        Correo Electrónico
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="productor@finca.com" 
+                            required 
+                            autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <span class="label-icon">🔒</span>
+                        Contraseña
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Mínimo 8 caracteres" 
+                            required 
+                            autocomplete="new-password"
+                            minlength="8">
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            👁️
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <p class="password-hint" id="passwordHint">La contraseña debe tener al menos 8 caracteres</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        <span class="label-icon">🔒</span>
+                        Confirmar Contraseña
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            placeholder="Repite tu contraseña" 
+                            required 
+                            autocomplete="new-password"
+                            minlength="8">
+                    </div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms" required>
+                        <span>Acepto los <a href="/terms" target="_blank">términos y condiciones</a> y la <a href="/privacy" target="_blank">política de privacidad</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">Crear Cuenta</span>
+                </button>
+            </form>
+
+            <div class="login-link">
+                ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/register.js"></script>
+</body>
+</html>

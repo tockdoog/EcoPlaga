@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Plagas - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<h1>Gestión de Plagas</h1>
+
+<nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/plagas">Plagas</a>
+    <a href="/incidencias">Incidencias</a>
+    <a href="/recomendaciones">Recomendaciones</a>
+    <a href="#" onclick="logout()">Cerrar Sesión</a>
+</nav>
+
+<section id="listaPlagas"></section>
+
+<script>
+    if (!localStorage.getItem("token")) window.location.href = "/";
+
+    async function cargarPlagas() {
+        const res = await fetch("/plagas/", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        const data = await res.json();
+
+        document.getElementById("listaPlagas").innerHTML =
+            data.map(p => `<p><strong>${p.nombre}</strong> - ${p.descripcion}</p>`).join("");
+    }
+
+    cargarPlagas();
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recomendaciones - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<h1>Recomendaciones Inteligentes</h1>
+
+<nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/plagas">Plagas</a>
+    <a href="/incidencias">Incidencias</a>
+    <a href="/recomendaciones">Recomendaciones</a>
+    <a href="#" onclick="logout()">Cerrar Sesión</a>
+</nav>
+
+<div id="reco"></div>
+
+<script>
+    if (!localStorage.getItem("token")) window.location.href = "/";
+
+    async function cargarRecomendaciones() {
+        const res = await fetch("/tratamientos/", {
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            }
+        });
+
+        const data = await res.json();
+
+        document.getElementById("reco").innerHTML =
+            data.map(r => `
+                <p>
+                    <strong>Plaga:</strong> ${r.plaga_id}<br>
+                    <strong>Tratamiento:</strong> ${r.descripcion}
+                </p>
+            `).join("");
+    }
+
+    cargarRecomendaciones();
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    }
+</script>
+
+</body>
+</html>

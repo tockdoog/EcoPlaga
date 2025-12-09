@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<h1>Dashboard EcoPlaga</h1>
+
+<nav>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/plagas">Plagas</a>
+    <a href="/incidencias">Incidencias</a>
+    <a href="/recomendaciones">Recomendaciones</a>
+    <a href="#" onclick="logout()">Cerrar Sesión</a>
+</nav>
+
+<p>Bienvenido al panel de control.</p>
+
+<script>
+    // Bloquear acceso sin token
+    if (!localStorage.getItem("token")) {
+        window.location.href = "/";
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+    }
+</script>
+
+</body>
+</html>
