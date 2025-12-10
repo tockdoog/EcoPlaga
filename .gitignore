@@ -27,3 +27,6 @@ Thumbs.db
 # Node / Frontend (si usas npm)
 node_modules/
 dist/
+
+
+*.sh

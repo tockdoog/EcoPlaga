@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
+from ..database import get_session  # Cambiado
 from ..models.incidencia import Incidencia
 from ..schemas.incidencia import IncidenciaCreate, IncidenciaRead
 from ..utils.security import get_current_user_id
@@ -13,7 +13,7 @@ from io import BytesIO
 router = APIRouter(prefix="/incidencias", tags=["incidencias"])
 
 @router.post("/", response_model=IncidenciaRead)
-async def create_incidencia(payload: IncidenciaCreate, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def create_incidencia(payload: IncidenciaCreate, db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     new = Incidencia(**payload.dict())
     db.add(new)
     await db.commit()
@@ -21,12 +21,12 @@ async def create_incidencia(payload: IncidenciaCreate, db: AsyncSession = Depend
     return new
 
 @router.get("/", response_model=list[IncidenciaRead])
-async def list_incidencias(db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def list_incidencias(db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     q = await db.execute(select(Incidencia))
     return q.scalars().all()
 
 @router.get("/{incidencia_id}", response_model=IncidenciaRead)
-async def get_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def get_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     q = await db.execute(select(Incidencia).where(Incidencia.id == incidencia_id))
     inc = q.scalar_one_or_none()
     if not inc:
@@ -34,7 +34,7 @@ async def get_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_db),
     return inc
 
 @router.put("/{incidencia_id}", response_model=IncidenciaRead)
-async def update_incidencia(incidencia_id: int, payload: IncidenciaCreate, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def update_incidencia(incidencia_id: int, payload: IncidenciaCreate, db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     q = await db.execute(select(Incidencia).where(Incidencia.id == incidencia_id))
     inc = q.scalar_one_or_none()
     if not inc:
@@ -46,7 +46,7 @@ async def update_incidencia(incidencia_id: int, payload: IncidenciaCreate, db: A
     return inc
 
 @router.delete("/{incidencia_id}")
-async def delete_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def delete_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     q = await db.execute(select(Incidencia).where(Incidencia.id == incidencia_id))
     inc = q.scalar_one_or_none()
     if not inc:
@@ -57,7 +57,7 @@ async def delete_incidencia(incidencia_id: int, db: AsyncSession = Depends(get_d
 
 # export CSV
 @router.get("/export/csv")
-async def export_csv(db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)):
+async def export_csv(db: AsyncSession = Depends(get_session), user_id: int = Depends(get_current_user_id)):
     q = await db.execute(select(Incidencia))
     rows = q.scalars().all()
     csv_text = incidencias_to_csv(rows)

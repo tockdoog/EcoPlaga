@@ -27,25 +27,36 @@ async def on_startup():
 
 # frontend routes (templates)
 @app.get("/", response_class=HTMLResponse)
+def root_redirect(request: Request):
+    """Página de inicio - muestra el login"""
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
+    """Página de login"""
     return templates.TemplateResponse("login.html", {"request": request})
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
+    """Página de registro"""
     return templates.TemplateResponse("register.html", {"request": request})
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def dashboard_page(request: Request):
+    """Dashboard principal - requiere autenticación"""
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @app.get("/plagas", response_class=HTMLResponse)
 def plagas_page(request: Request):
+    """Gestión de plagas (CRUD)"""
     return templates.TemplateResponse("plagas.html", {"request": request})
 
 @app.get("/incidencias", response_class=HTMLResponse)
 def incidencias_page(request: Request):
+    """Registro de incidencias"""
     return templates.TemplateResponse("incidencias.html", {"request": request})
 
 @app.get("/recomendaciones", response_class=HTMLResponse)
 def recomendaciones_page(request: Request):
+    """Módulo de análisis y recomendaciones"""
     return templates.TemplateResponse("recomendaciones.html", {"request": request})

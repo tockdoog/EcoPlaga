@@ -10,8 +10,8 @@ AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=F
 
 Base = declarative_base()
 
-# dependency
-async def get_db():
+# dependency - RENOMBRADA
+async def get_session():
     async with AsyncSessionLocal() as session:
         yield session
 

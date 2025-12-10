@@ -1,32 +1,61 @@
-# backend/app/routers/auth.py
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.future import select
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..database import get_db
+from sqlalchemy.future import select
+
+from ..schemas.user import UserCreate, UserRead  # Cambiado UserResponse por UserRead
 from ..models.user import User
-from ..schemas.user import UserCreate, UserRead, Token
+from ..database import get_session
 from ..utils.security import hash_password, verify_password, create_access_token
-from fastapi.security import OAuth2PasswordRequestForm
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
-@router.post("/register", status_code=201)
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    q = await db.execute(select(User).where(User.email == user.email))
-    existing = q.scalar_one_or_none()
+
+# ---------------------------- REGISTER --------------------------------------
+@router.post("/register", response_model=UserRead)  # Cambiado UserResponse por UserRead
+async def register(payload: UserCreate, db: AsyncSession = Depends(get_session)):
+    query = select(User).where(User.email == payload.email)
+    result = await db.execute(query)
+    existing = result.scalar_one_or_none()
+
     if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    new = User(name=user.name, email=user.email, password=hash_password(user.password))
-    db.add(new)
-    await db.commit()
-    await db.refresh(new)
-    return {"msg": "User created", "user_id": new.id}
+        raise HTTPException(status_code=400, detail="El email ya está registrado.")
 
-@router.post("/token", response_model=Token)
-async def login_token(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
-    q = await db.execute(select(User).where(User.email == form_data.username))
-    user = q.scalar_one_or_none()
-    if not user or not verify_password(form_data.password, user.password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect credentials")
-    token = create_access_token(str(user.id))
-    return {"access_token": token, "token_type": "bearer"}
+    new_user = User(
+        name=payload.name,
+        email=payload.email,
+        farm_name=payload.farm_name,
+        password=hash_password(payload.password),
+    )
+
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+
+    return new_user
+
+
+# ---------------------------- LOGIN --------------------------------------
+@router.post("/login")
+async def login(data: dict, db: AsyncSession = Depends(get_session)):
+    email = data.get("email")
+    password = data.get("password")
+
+    # Validar email
+    query = select(User).where(User.email == email)
+    result = await db.execute(query)
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Correo o contraseña incorrectos")
+
+    # Validar contraseña
+    if not verify_password(password, user.password):
+        raise HTTPException(status_code=400, detail="Correo o contraseña incorrectos")
+
+    # Crear token
+    access_token = create_access_token(subject=str(user.id))
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }

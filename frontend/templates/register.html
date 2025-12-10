@@ -3,135 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrarse - EcoPlaga</title>
+    <title>Registro - EcoPlaga</title>
     <link rel="stylesheet" href="/static/css/register.css">
 </head>
 <body>
+
     <div class="register-container">
+
         <div class="register-banner">
-            <div class="eco-icon">🌾</div>
+            <div class="eco-icon">🌱</div>
             <h1>EcoPlaga</h1>
-            <p>Únete a la comunidad de productores que confían en tecnología para el control sostenible de plagas.</p>
-            <div class="benefits">
-                <div class="benefit-item">
-                    <span class="benefit-icon">✓</span>
-                    <span>Acceso a herramientas profesionales</span>
-                </div>
-                <div class="benefit-item">
-                    <span class="benefit-icon">✓</span>
-                    <span>Monitoreo en tiempo real</span>
-                </div>
-                <div class="benefit-item">
-                    <span class="benefit-icon">✓</span>
-                    <span>Soporte técnico especializado</span>
-                </div>
-                <div class="benefit-item">
-                    <span class="benefit-icon">✓</span>
-                    <span>Reportes y análisis detallados</span>
-                </div>
-            </div>
+            <p>Crea tu cuenta y gestiona tus cultivos de forma eficiente y sostenible.</p>
         </div>
 
         <div class="register-form">
-            <div class="form-header">
-                <h2>Crea tu cuenta</h2>
-                <p>Comienza a gestionar tu producción agrícola hoy</p>
-            </div>
+            <h2>Crear Cuenta</h2>
+            <p class="subtitle">Ingresa los datos de tu finca y tu usuario</p>
 
             <div id="errorMessage" class="error-message"></div>
             <div id="successMessage" class="success-message"></div>
 
             <form id="registerForm">
+
                 <div class="form-group">
-                    <label for="name">
-                        <span class="label-icon">👤</span>
-                        Nombre completo
-                    </label>
-                    <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
-                            placeholder="Juan Pérez" 
-                            required 
-                            autocomplete="name"
-                            minlength="3">
-                    </div>
+                    <label for="name">👤 Nombre completo</label>
+                    <input type="text" id="name" name="name" placeholder="Juan Pérez" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">
-                        <span class="label-icon">📧</span>
-                        Correo Electrónico
-                    </label>
-                    <div class="input-wrapper">
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
-                            placeholder="productor@finca.com" 
-                            required 
-                            autocomplete="email">
-                    </div>
+                    <label for="email">📧 Correo Electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="productor@finca.com" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">
-                        <span class="label-icon">🔒</span>
-                        Contraseña
-                    </label>
-                    <div class="input-wrapper">
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            placeholder="Mínimo 8 caracteres" 
-                            required 
-                            autocomplete="new-password"
-                            minlength="8">
-                        <button type="button" class="toggle-password" id="togglePassword">
-                            👁️
-                        </button>
-                    </div>
-                    <div class="password-strength">
-                        <div class="strength-bar" id="strengthBar"></div>
-                    </div>
-                    <p class="password-hint" id="passwordHint">La contraseña debe tener al menos 8 caracteres</p>
+                    <label for="farm_name">🏡 Nombre de la Finca</label>
+                    <input type="text" id="farm_name" name="farm_name" placeholder="Finca El Progreso" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="confirmPassword">
-                        <span class="label-icon">🔒</span>
-                        Confirmar Contraseña
-                    </label>
-                    <div class="input-wrapper">
-                        <input 
-                            type="password" 
-                            id="confirmPassword" 
-                            name="confirmPassword" 
-                            placeholder="Repite tu contraseña" 
-                            required 
-                            autocomplete="new-password"
-                            minlength="8">
-                    </div>
-                </div>
-
-                <div class="form-group checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="terms" required>
-                        <span>Acepto los <a href="/terms" target="_blank">términos y condiciones</a> y la <a href="/privacy" target="_blank">política de privacidad</a></span>
-                    </label>
+                    <label for="password">🔒 Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">
-                    <span id="btnText">Crear Cuenta</span>
+                    Registrarse
                 </button>
             </form>
 
             <div class="login-link">
-                ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+                ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
             </div>
         </div>
+
     </div>
 
     <script src="/static/js/register.js"></script>

@@ -2,46 +2,140 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Plagas - EcoPlaga</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Plagas - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/plagas.css">
 </head>
 <body>
 
-<h1>Gestión de Plagas</h1>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="eco-icon">🌱</span>
+            <h2>EcoPlaga</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="/dashboard" class="menu-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/plagas" class="menu-item active">
+                <span class="icon">🐛</span>
+                <span>Plagas</span>
+            </a>
+            <a href="/incidencias" class="menu-item">
+                <span class="icon">⚠️</span>
+                <span>Incidencias</span>
+            </a>
+            <a href="/recomendaciones" class="menu-item">
+                <span class="icon">💡</span>
+                <span>Recomendaciones</span>
+            </a>
+        </nav>
 
-<nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/plagas">Plagas</a>
-    <a href="/incidencias">Incidencias</a>
-    <a href="/recomendaciones">Recomendaciones</a>
-    <a href="#" onclick="logout()">Cerrar Sesión</a>
-</nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
 
-<section id="listaPlagas"></section>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>🐛 Gestión de Plagas</h1>
+                <p class="subtitle">Catálogo de plagas identificadas en tus cultivos</p>
+            </div>
+            <button class="add-btn" onclick="openModal()">
+                <span>➕</span>
+                Nueva Plaga
+            </button>
+        </div>
 
-<script>
-    if (!localStorage.getItem("token")) window.location.href = "/";
+        <!-- Messages -->
+        <div id="errorMessage" class="message error"></div>
+        <div id="successMessage" class="message success"></div>
 
-    async function cargarPlagas() {
-        const res = await fetch("/plagas/", {
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
+        <!-- Plagas Container -->
+        <div class="plagas-container">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Buscar plagas por nombre...">
+            </div>
+
+            <div class="table-wrapper">
+                <table id="plagasTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="plagasTableBody">
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div class="icon">🔍</div>
+                                    <p>Cargando plagas...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="plagaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nueva Plaga</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <form id="plagaForm">
+                <input type="hidden" id="plagaId">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre de la plaga *</label>
+                    <input type="text" id="nombre" name="nombre" required 
+                           placeholder="Ej: Pulgón verde">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" 
+                              placeholder="Describe las características de la plaga, síntomas en cultivos, etc."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/plagas.js"></script>
+
+    <script>
+        // Protección de ruta
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
             }
-        });
-
-        const data = await res.json();
-
-        document.getElementById("listaPlagas").innerHTML =
-            data.map(p => `<p><strong>${p.nombre}</strong> - ${p.descripcion}</p>`).join("");
-    }
-
-    cargarPlagas();
-
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "/";
-    }
-</script>
+        }
+    </script>
 
 </body>
 </html>

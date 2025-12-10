@@ -2,34 +2,166 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - EcoPlaga</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
 </head>
 <body>
 
-<h1>Dashboard EcoPlaga</h1>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="eco-icon">🌱</span>
+            <h2>EcoPlaga</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="/dashboard" class="menu-item active">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/plagas" class="menu-item">
+                <span class="icon">🐛</span>
+                <span>Plagas</span>
+            </a>
+            <a href="/incidencias" class="menu-item">
+                <span class="icon">⚠️</span>
+                <span>Incidencias</span>
+            </a>
+            <a href="/recomendaciones" class="menu-item">
+                <span class="icon">💡</span>
+                <span>Recomendaciones</span>
+            </a>
+        </nav>
 
-<nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/plagas">Plagas</a>
-    <a href="/incidencias">Incidencias</a>
-    <a href="/recomendaciones">Recomendaciones</a>
-    <a href="#" onclick="logout()">Cerrar Sesión</a>
-</nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
 
-<p>Bienvenido al panel de control.</p>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1>Dashboard</h1>
+                <p class="subtitle">Resumen general de tu sistema de gestión de plagas</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="user-icon">👤</span>
+                    <span id="userName">Cargando...</span>
+                </div>
+            </div>
+        </header>
 
-<script>
-    // Bloquear acceso sin token
-    if (!localStorage.getItem("token")) {
-        window.location.href = "/";
-    }
+        <!-- Stats Cards -->
+        <section class="stats-grid">
+            <div class="stat-card cultivos">
+                <div class="stat-icon">🌾</div>
+                <div class="stat-info">
+                    <h3 id="totalCultivos">0</h3>
+                    <p>Cultivos Registrados</p>
+                </div>
+            </div>
 
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "/";
-    }
-</script>
+            <div class="stat-card plagas">
+                <div class="stat-icon">🐛</div>
+                <div class="stat-info">
+                    <h3 id="totalPlagas">0</h3>
+                    <p>Tipos de Plagas</p>
+                </div>
+            </div>
+
+            <div class="stat-card incidencias">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-info">
+                    <h3 id="totalIncidencias">0</h3>
+                    <p>Incidencias Activas</p>
+                </div>
+            </div>
+
+            <div class="stat-card tratamientos">
+                <div class="stat-icon">💊</div>
+                <div class="stat-info">
+                    <h3 id="totalTratamientos">0</h3>
+                    <p>Tratamientos Aplicados</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>📈 Incidencias Recientes</h3>
+                    <button class="export-btn" id="exportBtn">
+                        📥 Exportar CSV
+                    </button>
+                </div>
+                <div id="incidenciasChart" class="chart-content">
+                    <div class="loading">Cargando datos...</div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3>🔍 Plagas Más Frecuentes</h3>
+                </div>
+                <div id="plagasChart" class="chart-content">
+                    <div class="loading">Cargando datos...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h3>⚡ Acciones Rápidas</h3>
+            <div class="actions-grid">
+                <a href="/incidencias" class="action-card">
+                    <span class="action-icon">➕</span>
+                    <div>
+                        <h4>Registrar Incidencia</h4>
+                        <p>Reporta una nueva plaga detectada</p>
+                    </div>
+                </a>
+                <a href="/plagas" class="action-card">
+                    <span class="action-icon">🔬</span>
+                    <div>
+                        <h4>Ver Catálogo de Plagas</h4>
+                        <p>Consulta información detallada</p>
+                    </div>
+                </a>
+                <a href="/recomendaciones" class="action-card">
+                    <span class="action-icon">🎯</span>
+                    <div>
+                        <h4>Ver Recomendaciones</h4>
+                        <p>Análisis y alertas automáticas</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/static/js/dashboard.js"></script>
+
+    <script>
+        // Protección de ruta - Verificar autenticación
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+            }
+        }
+    </script>
 
 </body>
 </html>
