@@ -4,8 +4,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+
 from .database import init_db
-from .routers import auth, users, cultivos, plagas, incidencias, tratamientos
+from .routers import auth, users, cultivos, plagas, incidencias, tratamientos, recomendaciones
 
 app = FastAPI(title="EcoPlaga")
 
@@ -20,6 +21,8 @@ app.include_router(cultivos.router)
 app.include_router(plagas.router)
 app.include_router(incidencias.router)
 app.include_router(tratamientos.router)
+app.include_router(recomendaciones.router)
+
 
 @app.on_event("startup")
 async def on_startup():

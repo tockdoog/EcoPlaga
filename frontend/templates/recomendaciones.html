@@ -2,51 +2,161 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recomendaciones - EcoPlaga</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/recomendaciones.css">
 </head>
 <body>
 
-<h1>Recomendaciones Inteligentes</h1>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="eco-icon">🌱</span>
+            <h2>EcoPlaga</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="/dashboard" class="menu-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/plagas" class="menu-item">
+                <span class="icon">🐛</span>
+                <span>Plagas</span>
+            </a>
+            <a href="/incidencias" class="menu-item">
+                <span class="icon">⚠️</span>
+                <span>Incidencias</span>
+            </a>
+            <a href="/recomendaciones" class="menu-item active">
+                <span class="icon">💡</span>
+                <span>Recomendaciones</span>
+            </a>
+        </nav>
 
-<nav>
-    <a href="/dashboard">Dashboard</a>
-    <a href="/plagas">Plagas</a>
-    <a href="/incidencias">Incidencias</a>
-    <a href="/recomendaciones">Recomendaciones</a>
-    <a href="#" onclick="logout()">Cerrar Sesión</a>
-</nav>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
 
-<div id="reco"></div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>💡 Análisis y Recomendaciones</h1>
+                <p class="subtitle">Sistema inteligente de alertas y sugerencias con IA</p>
+            </div>
+            <button class="refresh-btn" onclick="reloadData()">
+                <span>🔄</span>
+                Actualizar
+            </button>
+        </div>
 
-<script>
-    if (!localStorage.getItem("token")) window.location.href = "/";
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-container">
+            <div class="spinner"></div>
+            <p>Analizando datos con Pandas y Numpy...</p>
+        </div>
 
-    async function cargarRecomendaciones() {
-        const res = await fetch("/tratamientos/", {
-            headers: {
-                "Authorization": "Bearer " + localStorage.getItem("token")
+        <!-- Alertas Section -->
+        <section id="alertasSection" class="section" style="display: none;">
+            <h2 class="section-title">🚨 Alertas Activas</h2>
+            <div id="alertasContainer" class="alerts-grid">
+                <!-- Alertas dinámicas -->
+            </div>
+        </section>
+
+        <!-- Estadísticas Section -->
+        <section id="estadisticasSection" class="section" style="display: none;">
+            <h2 class="section-title">📊 Estadísticas Generales</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <h3 id="totalIncidencias">0</h3>
+                        <p>Total Incidencias</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🐛</div>
+                    <div class="stat-info">
+                        <h3 id="plagasUnicas">0</h3>
+                        <p>Plagas Únicas</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌾</div>
+                    <div class="stat-info">
+                        <h3 id="cultivosAfectados">0</h3>
+                        <p>Cultivos Afectados</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-info">
+                        <h3 id="severidadPromedio">0</h3>
+                        <p>Severidad Promedio</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recomendaciones Section -->
+        <section id="recomendacionesSection" class="section" style="display: none;">
+            <h2 class="section-title">💊 Recomendaciones de Tratamiento</h2>
+            <div id="recomendacionesContainer" class="recomendaciones-grid">
+                <!-- Recomendaciones dinámicas -->
+            </div>
+        </section>
+
+        <!-- Análisis de Plagas Section -->
+        <section id="analisisSection" class="section" style="display: none;">
+            <h2 class="section-title">🔬 Análisis Detallado por Plaga</h2>
+            <div id="analisisContainer" class="analisis-container">
+                <!-- Análisis dinámico -->
+            </div>
+        </section>
+
+        <!-- Tendencias Section -->
+        <section id="tendenciasSection" class="section" style="display: none;">
+            <h2 class="section-title">📈 Tendencias Temporales</h2>
+            <div id="tendenciasContainer" class="tendencias-container">
+                <!-- Tendencias dinámicas -->
+            </div>
+        </section>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📊</div>
+            <h3>No hay datos suficientes para análisis</h3>
+            <p>Registra algunas incidencias para obtener recomendaciones inteligentes</p>
+            <a href="/incidencias" class="btn-primary">Registrar Incidencia</a>
+        </div>
+
+    </main>
+
+    <script src="/static/js/recomendaciones.js"></script>
+
+    <script>
+        // Protección de ruta
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
             }
-        });
+        }
 
-        const data = await res.json();
-
-        document.getElementById("reco").innerHTML =
-            data.map(r => `
-                <p>
-                    <strong>Plaga:</strong> ${r.plaga_id}<br>
-                    <strong>Tratamiento:</strong> ${r.descripcion}
-                </p>
-            `).join("");
-    }
-
-    cargarRecomendaciones();
-
-    function logout() {
-        localStorage.removeItem("token");
-        window.location.href = "/";
-    }
-</script>
+        function reloadData() {
+            location.reload();
+        }
+    </script>
 
 </body>
 </html>
