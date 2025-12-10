@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cultivos - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/cultivos.css">
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="eco-icon">🌱</span>
+            <h2>EcoPlaga</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="/dashboard" class="menu-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/cultivos" class="menu-item active">
+                <span class="icon">🌾</span>
+                <span>Cultivos</span>
+            </a>
+            <a href="/plagas" class="menu-item">
+                <span class="icon">🐛</span>
+                <span>Plagas</span>
+            </a>
+            <a href="/incidencias" class="menu-item">
+                <span class="icon">⚠️</span>
+                <span>Incidencias</span>
+            </a>
+            <a href="/recomendaciones" class="menu-item">
+                <span class="icon">💡</span>
+                <span>Recomendaciones</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>🌾 Gestión de Cultivos</h1>
+                <p class="subtitle">Administra los cultivos de tu finca</p>
+            </div>
+            <button class="add-btn" onclick="openModal()">
+                <span>➕</span>
+                Nuevo Cultivo
+            </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="errorMessage" class="message error"></div>
+        <div id="successMessage" class="message success"></div>
+
+        <!-- Cultivos Container -->
+        <div class="cultivos-container">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Buscar cultivos por nombre o tipo...">
+            </div>
+
+            <div class="table-wrapper">
+                <table id="cultivosTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cultivosTableBody">
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div class="icon">🔍</div>
+                                    <p>Cargando cultivos...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="cultivoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Cultivo</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <form id="cultivoForm">
+                <input type="hidden" id="cultivoId">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre del cultivo *</label>
+                    <input type="text" id="nombre" name="nombre" required 
+                           placeholder="Ej: Maíz, Tomate, Café">
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo de cultivo</label>
+                    <select id="tipo" name="tipo">
+                        <option value="">Selecciona un tipo</option>
+                        <option value="Cereal">🌾 Cereal (Maíz, Trigo, Arroz)</option>
+                        <option value="Hortaliza">🥬 Hortaliza (Tomate, Lechuga, Zanahoria)</option>
+                        <option value="Fruta">🍎 Fruta (Manzana, Naranja, Fresa)</option>
+                        <option value="Legumbre">🫘 Legumbre (Frijol, Lenteja, Garbanzo)</option>
+                        <option value="Tubérculo">🥔 Tubérculo (Papa, Yuca, Camote)</option>
+                        <option value="Oleaginosa">🌻 Oleaginosa (Girasol, Soya, Canola)</option>
+                        <option value="Aromática">🌿 Aromática (Albahaca, Romero, Menta)</option>
+                        <option value="Caña">🎋 Caña (Caña de azúcar, Bambú)</option>
+                        <option value="Café">☕ Café</option>
+                        <option value="Cacao">🍫 Cacao</option>
+                        <option value="Otro">📦 Otro</option>
+                    </select>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/cultivos.js"></script>
+
+    <script>
+        // Protección de ruta
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+            }
+        }
+    </script>
+
+</body>
+</html>

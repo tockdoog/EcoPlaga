@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Servicio de la aplicación FastAPI
+  app:
+    build: .
+    container_name: ecoplaga_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - ./ecoplaga.db:/app/ecoplaga.db
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./ecoplaga.db
+    restart: unless-stopped
+    command: uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
