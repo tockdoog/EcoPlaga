@@ -3,49 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Incidencias</title>
+    <title>Registro de Incidencias - EcoPlaga</title>
     <link rel="stylesheet" href="/static/css/incidencias.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Incidencias</h1>
 
-        <!-- Formulario de creación -->
-        <form id="formIncidencia">
-            <label for="cultivo_id">ID Cultivo:</label>
-            <input type="number" id="cultivo_id" name="cultivo_id" required>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="eco-icon">🌱</span>
+            <h2>EcoPlaga</h2>
+        </div>
+        
+        <nav class="menu">
+            <a href="/dashboard" class="menu-item">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="/plagas" class="menu-item">
+                <span class="icon">🐛</span>
+                <span>Plagas</span>
+            </a>
+            <a href="/incidencias" class="menu-item active">
+                <span class="icon">⚠️</span>
+                <span>Incidencias</span>
+            </a>
+            <a href="/recomendaciones" class="menu-item">
+                <span class="icon">💡</span>
+                <span>Recomendaciones</span>
+            </a>
+        </nav>
 
-            <label for="plaga_id">ID Plaga:</label>
-            <input type="number" id="plaga_id" name="plaga_id" required>
+        <div class="sidebar-footer">
+            <button class="logout-btn" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
 
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion"></textarea>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h1>⚠️ Registro de Incidencias</h1>
+                <p class="subtitle">Documenta las plagas detectadas en tus cultivos</p>
+            </div>
+            <div class="header-actions">
+                <button class="export-btn" onclick="exportCSV()">
+                    📥 Exportar CSV
+                </button>
+                <button class="add-btn" onclick="openModal()">
+                    <span>➕</span>
+                    Nueva Incidencia
+                </button>
+            </div>
+        </div>
 
-            <label for="severidad">Severidad:</label>
-            <input type="text" id="severidad" name="severidad">
+        <!-- Messages -->
+        <div id="errorMessage" class="message error"></div>
+        <div id="successMessage" class="message success"></div>
 
-            <button type="submit">Crear Incidencia</button>
-        </form>
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filter-group">
+                <label>🔍 Buscar:</label>
+                <input type="text" id="searchInput" placeholder="Buscar por descripción...">
+            </div>
+            <div class="filter-group">
+                <label>🎯 Severidad:</label>
+                <select id="filterSeveridad">
+                    <option value="">Todas</option>
+                    <option value="Baja">Baja</option>
+                    <option value="Media">Media</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Crítica">Crítica</option>
+                </select>
+            </div>
+        </div>
 
-        <!-- Tabla de incidencias -->
-        <h2>Listado de Incidencias</h2>
-        <table id="tablaIncidencias">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Cultivo</th>
-                    <th>Plaga</th>
-                    <th>Descripción</th>
-                    <th>Severidad</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Aquí se cargan las incidencias -->
-            </tbody>
-        </table>
+        <!-- Incidencias Container -->
+        <div class="incidencias-container">
+            <div class="table-wrapper">
+                <table id="incidenciasTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Cultivo</th>
+                            <th>Plaga</th>
+                            <th>Severidad</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidenciasTableBody">
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="icon">🔍</div>
+                                    <p>Cargando incidencias...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="incidenciaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nueva Incidencia</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
+            <form id="incidenciaForm">
+                <input type="hidden" id="incidenciaId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cultivo_id">🌾 Cultivo *</label>
+                        <select id="cultivo_id" name="cultivo_id" required>
+                            <option value="">Selecciona un cultivo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plaga_id">🐛 Plaga *</label>
+                        <select id="plaga_id" name="plaga_id" required>
+                            <option value="">Selecciona una plaga</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="severidad">🎯 Nivel de Severidad *</label>
+                    <select id="severidad" name="severidad" required>
+                        <option value="">Selecciona severidad</option>
+                        <option value="Baja">🟢 Baja - Daño mínimo</option>
+                        <option value="Media">🟡 Media - Daño moderado</option>
+                        <option value="Alta">🟠 Alta - Daño considerable</option>
+                        <option value="Crítica">🔴 Crítica - Daño severo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">📝 Descripción</label>
+                    <textarea id="descripcion" name="descripcion" 
+                              placeholder="Describe la incidencia: área afectada, síntomas observados, condiciones climáticas, etc."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-submit">Registrar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <script src="/frontend/static/js/incidencias.js"></script>
+    <script src="/static/js/incidencias.js"></script>
+
+    <script>
+        // Protección de ruta
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            if (confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+            }
+        }
+    </script>
+
 </body>
 </html>
