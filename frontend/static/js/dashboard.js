@@ -30,12 +30,21 @@ async function loadUserInfo() {
         if (res.ok) {
             const user = await res.json();
             document.getElementById("userName").textContent = user.name || user.email;
+            
+            // Mostrar nombre de la finca
+            if (user.farm_name) {
+                document.getElementById("farmName").textContent = user.farm_name;
+            } else {
+                document.getElementById("farmName").textContent = "Sin finca registrada";
+            }
         } else {
             document.getElementById("userName").textContent = "Usuario";
+            document.getElementById("farmName").textContent = "Finca";
         }
     } catch (error) {
         console.error("Error cargando usuario:", error);
         document.getElementById("userName").textContent = "Usuario";
+        document.getElementById("farmName").textContent = "Finca";
     }
 }
 

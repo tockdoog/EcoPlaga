@@ -3,12 +3,21 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from .database import init_db
 from .routers import auth, users, cultivos, plagas, incidencias, tratamientos, recomendaciones
 
 app = FastAPI(title="EcoPlaga")
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # En producción, especifica los dominios permitidos
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # static and templates (frontend files you manage)
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
@@ -49,6 +58,11 @@ def dashboard_page(request: Request):
     """Dashboard principal - requiere autenticación"""
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
+@app.get("/cultivos", response_class=HTMLResponse)
+def cultivos_page(request: Request):
+    """Gestión de cultivos"""
+    return templates.TemplateResponse("cultivos.html", {"request": request})
+
 @app.get("/plagas", response_class=HTMLResponse)
 def plagas_page(request: Request):
     """Gestión de plagas (CRUD)"""
@@ -63,7 +77,3 @@ def incidencias_page(request: Request):
 def recomendaciones_page(request: Request):
     """Módulo de análisis y recomendaciones"""
     return templates.TemplateResponse("recomendaciones.html", {"request": request})
-
-@app.get("/cultivos", response_class=HTMLResponse)
-def cultivos_page(request: Request):
-    return templates.TemplateResponse("cultivos.html", {"request": request})

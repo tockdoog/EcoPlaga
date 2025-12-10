@@ -341,3 +341,14 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Nombre de la finca */
+.farm-name {
+    color: #4a7c23;
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
