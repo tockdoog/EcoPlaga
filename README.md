@@ -464,9 +464,9 @@ Desarrollado con ❤️ por el equipo EcoPlaga
 
 ## 📞 Contacto
 
-- **Email:** contacto@ecoplaga.com
-- **GitHub:** [@tu-usuario](https://github.com/tu-usuario)
-- **LinkedIn:** [Tu Perfil](https://linkedin.com/in/tu-perfil)
+- **Email:** jorgeandreyhernandez26@gmail.com
+- **GitHub:** [@tockdoog](https://github.com/tockdoog)
+- **LinkedIn:** [Andrei Hernández](https://www.linkedin.com/in/andreihern%C3%A1ndez-27592a257/)
 
 ---
 
