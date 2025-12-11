@@ -1,3 +1,4 @@
+// frontend/static/js/register.js
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("registerForm");
     const errorMessage = document.getElementById("errorMessage");
@@ -13,8 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
             name: document.getElementById("name").value,
             email: document.getElementById("email").value,
             farm_name: document.getElementById("farm_name").value,
+            role: document.getElementById("role").value,  // NUEVO
             password: document.getElementById("password").value,
         };
+
+        // Validación de rol
+        if (!data.role) {
+            errorMessage.textContent = "Debes seleccionar un rol";
+            errorMessage.style.display = "block";
+            return;
+        }
 
         try {
             const res = await fetch("/auth/register", {

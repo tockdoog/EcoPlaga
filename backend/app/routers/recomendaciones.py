@@ -18,14 +18,11 @@ async def obtener_analisis(
     db: AsyncSession = Depends(get_session),
     user_id: int = Depends(get_current_user_id)
 ):
-    """
-    Endpoint principal: devuelve análisis completo de incidencias
-    - Resumen por plaga
-    - Estadísticas generales
-    - Tendencias
-    """
-    # Cargar incidencias
-    q = await db.execute(select(Incidencia))
+    """Análisis completo - solo datos del usuario actual"""
+    # Cargar incidencias del usuario
+    q = await db.execute(
+        select(Incidencia).where(Incidencia.user_id == user_id)
+    )
     incidencias = q.scalars().all()
     
     if not incidencias:
@@ -54,9 +51,14 @@ async def obtener_analisis(
     estadisticas = estadisticas_generales(inc_dicts)
     tendencias = analisis_tendencias(inc_dicts)
     
-    # Obtener nombres de plagas
+    # Obtener nombres de plagas del usuario
     plagas_ids = list(set(inc.plaga_id for inc in incidencias))
-    q_plagas = await db.execute(select(Plaga).where(Plaga.id.in_(plagas_ids)))
+    q_plagas = await db.execute(
+        select(Plaga).where(
+            Plaga.id.in_(plagas_ids),
+            Plaga.user_id == user_id
+        )
+    )
     plagas = {p.id: p.nombre for p in q_plagas.scalars().all()}
     
     return {
@@ -73,10 +75,10 @@ async def obtener_alertas(
     db: AsyncSession = Depends(get_session),
     user_id: int = Depends(get_current_user_id)
 ):
-    """
-    Genera alertas automáticas basadas en severidad e incidencias
-    """
-    q = await db.execute(select(Incidencia))
+    """Alertas - solo datos del usuario actual"""
+    q = await db.execute(
+        select(Incidencia).where(Incidencia.user_id == user_id)
+    )
     incidencias = q.scalars().all()
     
     if not incidencias:
@@ -99,7 +101,12 @@ async def obtener_alertas(
     # Enriquecer con nombres
     plagas_ids = list(set(a["plaga_id"] for a in alertas if "plaga_id" in a))
     if plagas_ids:
-        q_plagas = await db.execute(select(Plaga).where(Plaga.id.in_(plagas_ids)))
+        q_plagas = await db.execute(
+            select(Plaga).where(
+                Plaga.id.in_(plagas_ids),
+                Plaga.user_id == user_id
+            )
+        )
         plagas = {p.id: p.nombre for p in q_plagas.scalars().all()}
         
         for alerta in alertas:
@@ -114,10 +121,10 @@ async def obtener_sugerencias(
     db: AsyncSession = Depends(get_session),
     user_id: int = Depends(get_current_user_id)
 ):
-    """
-    Genera recomendaciones de tratamiento basadas en incidencias
-    """
-    q = await db.execute(select(Incidencia))
+    """Sugerencias - solo datos del usuario actual"""
+    q = await db.execute(
+        select(Incidencia).where(Incidencia.user_id == user_id)
+    )
     incidencias = q.scalars().all()
     
     if not incidencias:
@@ -140,7 +147,12 @@ async def obtener_sugerencias(
     # Enriquecer con nombres
     plagas_ids = list(set(s["plaga_id"] for s in sugerencias if "plaga_id" in s))
     if plagas_ids:
-        q_plagas = await db.execute(select(Plaga).where(Plaga.id.in_(plagas_ids)))
+        q_plagas = await db.execute(
+            select(Plaga).where(
+                Plaga.id.in_(plagas_ids),
+                Plaga.user_id == user_id
+            )
+        )
         plagas = {p.id: p.nombre for p in q_plagas.scalars().all()}
         
         for sug in sugerencias:
