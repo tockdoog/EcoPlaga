@@ -59,3 +59,4 @@ async def login(data: dict, db: AsyncSession = Depends(get_session)):
         "access_token": access_token,
         "token_type": "bearer"
     }
+
