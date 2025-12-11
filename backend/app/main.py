@@ -77,3 +77,8 @@ def incidencias_page(request: Request):
 def recomendaciones_page(request: Request):
     """Módulo de análisis y recomendaciones"""
     return templates.TemplateResponse("recomendaciones.html", {"request": request})
+
+@app.get("/tratamientos", response_class=HTMLResponse)
+def tratamientos_page(request: Request):
+    """Gestión de tratamientos (HTML)"""
+    return templates.TemplateResponse("tratamientos.html", {"request": request})

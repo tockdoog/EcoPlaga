@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Plagas - EcoPlaga</title>
-    <link rel="stylesheet" href="/static/css/plagas.css">
+    <title>Gestión de Tratamientos - EcoPlaga</title>
+    <link rel="stylesheet" href="/static/css/tratamientos.css">
 </head>
 <body>
 
@@ -24,7 +24,7 @@
                 <span class="icon">🌾</span>
                 <span>Cultivos</span>
             </a>
-            <a href="/plagas" class="menu-item active">
+            <a href="/plagas" class="menu-item">
                 <span class="icon">🐛</span>
                 <span>Plagas</span>
             </a>
@@ -32,13 +32,13 @@
                 <span class="icon">⚠️</span>
                 <span>Incidencias</span>
             </a>
+            <a href="/tratamientos" class="menu-item active">
+                <span class="icon">💊</span>
+                <span>Tratamientos</span>
+            </a>
             <a href="/recomendaciones" class="menu-item">
                 <span class="icon">💡</span>
                 <span>Recomendaciones</span>
-            </a>
-            <a href="/tratamientos" class="menu-item">
-                <span class="icon">💊</span>
-                <span>Tratamientos</span>
             </a>
         </nav>
 
@@ -54,12 +54,12 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <h1>🐛 Gestión de Plagas</h1>
-                <p class="subtitle">Catálogo de plagas identificadas en tus cultivos</p>
+                <h1>💊 Gestión de Tratamientos</h1>
+                <p class="subtitle">Registro de tratamientos aplicados contra plagas</p>
             </div>
             <button class="add-btn" onclick="openModal()">
                 <span>➕</span>
-                Nueva Plaga
+                Nuevo Tratamiento
             </button>
         </div>
 
@@ -67,28 +67,39 @@
         <div id="errorMessage" class="message error"></div>
         <div id="successMessage" class="message success"></div>
 
-        <!-- Plagas Container -->
-        <div class="plagas-container">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Buscar plagas por nombre...">
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="filter-group">
+                <label>🔍 Buscar:</label>
+                <input type="text" id="searchInput" placeholder="Buscar por descripción...">
             </div>
+            <div class="filter-group">
+                <label>🐛 Filtrar por plaga:</label>
+                <select id="filterPlaga">
+                    <option value="">Todas las plagas</option>
+                </select>
+            </div>
+        </div>
 
+        <!-- Tratamientos Container -->
+        <div class="tratamientos-container">
             <div class="table-wrapper">
-                <table id="plagasTable">
+                <table id="tratamientosTable">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Plaga</th>
                             <th>Descripción</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="plagasTableBody">
+                    <tbody id="tratamientosTableBody">
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <div class="empty-state">
                                     <div class="icon">🔍</div>
-                                    <p>Cargando plagas...</p>
+                                    <p>Cargando tratamientos...</p>
                                 </div>
                             </td>
                         </tr>
@@ -99,26 +110,27 @@
     </main>
 
     <!-- Modal Form -->
-    <div id="plagaModal" class="modal">
+    <div id="tratamientoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Nueva Plaga</h2>
+                <h2 id="modalTitle">Nuevo Tratamiento</h2>
                 <button class="close-btn" onclick="closeModal()">×</button>
             </div>
 
-            <form id="plagaForm">
-                <input type="hidden" id="plagaId">
+            <form id="tratamientoForm">
+                <input type="hidden" id="tratamientoId">
                 
                 <div class="form-group">
-                    <label for="nombre">Nombre de la plaga *</label>
-                    <input type="text" id="nombre" name="nombre" required 
-                           placeholder="Ej: Pulgón verde">
+                    <label for="plaga_id">🐛 Plaga *</label>
+                    <select id="plaga_id" name="plaga_id" required>
+                        <option value="">Selecciona una plaga</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="descripcion">Descripción</label>
-                    <textarea id="descripcion" name="descripcion" 
-                              placeholder="Describe las características de la plaga, síntomas en cultivos, etc."></textarea>
+                    <label for="descripcion">📝 Descripción del tratamiento *</label>
+                    <textarea id="descripcion" name="descripcion" required
+                              placeholder="Describe el tratamiento aplicado: producto usado, dosis, área tratada, método de aplicación, etc."></textarea>
                 </div>
 
                 <div class="modal-actions">
@@ -129,7 +141,7 @@
         </div>
     </div>
 
-    <script src="/static/js/plagas.js"></script>
+    <script src="/static/js/tratamientos.js"></script>
 
     <script>
         // Protección de ruta
